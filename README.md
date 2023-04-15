@@ -1,3 +1,5 @@
+# dice-api
+
 ### How to use?
 
 #### Create .env file in root
