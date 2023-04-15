@@ -11,7 +11,7 @@ interface BetOutput {
 const resolvers = {
     Query: {
         getUserList: async () => {
-            return await db.User.findAll();
+            return await db.User.findAll({ include: [db.Bet] });
         },
         getUser: async (_: any, { id }: { id: number }) => {
             const user = await db.User.findByPk(id, { include: [db.Bet] });
@@ -22,7 +22,7 @@ const resolvers = {
             return user;
         },
         getBetList: async () => {
-            return await db.Bet.findAll();
+            return await db.Bet.findAll({ include: [db.User] });
         },
         getBet: async (_: any, { id }: { id: number }) => {
             const bet = await db.Bet.findByPk(id, { include: [db.User] });
@@ -38,6 +38,9 @@ const resolvers = {
                     'UserId',
                     [db.sequelize.fn('MAX', db.sequelize.col('payout')), 'payout'],
                 ],
+                where: {
+                    win: true
+                },
                 group: ['UserId'],
                 order: [[db.sequelize.col('payout'), 'DESC']],
                 limit: limit,
